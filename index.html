@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Dr. Lankapalli Bullayya College of Engineering - Queries bot</title>
+    <meta name="description" content="A Voice Note App that allows you to take voice and/or text notes and play them back.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Bootstrap CDN CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.1/cerulean/bootstrap.min.css" rel="stylesheet" integrity="sha384-0Mou2qXGeXK7k/Ue/a1hspEVcEP2zCpoQZw8/MPeUgISww+VmDJcy2ri9tX0a6iy" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <div class="container-fluid align-center">
+        <!-- <img src="assets/img/code-mic-150.png" alt="Voice Note App Logo"> -->
+        <br><br>
+        <h1>Dr. Lankapalli Bullayya College of Engineering - Queries bot</h1>
+        <p class="page-description">Through this you can ask your queries and you will get the immediate response of it.</p>
+        <hr>
+        <h3 class="no-browser-support">Sorry, Your Browser Doesn't Support the Web Speech API. Try Opening This Demo In Google Chrome.</h3>
+        <div class="app">
+            <div class="row">
+                <div class="col-md-6 align-center">
+                    <h3>Ask New Question</h3>
+                    <div class="input-single" style="margin: 20px 90px;width:80%">
+                        <select class="form-control" name="database" id="database">
+                            <option value="">Select Database</option>
+                            <option value="Faculty">Faculty</option>
+                            <option value="Student">Student</option>
+                            <option value="Library">Library</option>
+                            <option value="Location">Location</option>
+                            <option value="TimeTable">Time-table</option>
+                            <option value="NSS_Event">NSS NCC Event schedule</option>
+                        </select>
+                    </div>
+                    <div class="input-single" style="margin: 20px 90px;width:80%">
+                        <select class="form-control" name="question" id="question">
+                        </select>
+                    </div>
+                    <div class="input-single">
+                        <textarea id="note-textarea" placeholder="Create a new note by typing or using voice recognition." rows="6" style="padding: 10px;"></textarea>
+                    </div>
+                    <button style="cursor:pointer;" onclick="get_data()" id="submit" class="btn-success" title="Submit">Get Result</button>
+                    <button style="cursor:pointer;" onclick="clear_input()" id="submit" class="btn-warning" title="Clear">Clear Input</button>
+                    
+                    <!-- <button id="save-note-btn" class="btn-info" title="Save Note">Save Note</button> -->
+                    
+                </div>
+                <div class="col-md-6 align-center">
+                    <img src="assets/img/code-mic-150.png" alt="Voice Note App Logo">
+                    <br><br><br>
+                    <button id="start-record-btn" style="cursor:pointer;" class="btn-success" title="Start Recording">Start Speaking</button>
+                    <!-- <button id="pause-record-btn" style="cursor:pointer;" class="btn-warning" title="Pause Recording">Stop Speaking</button> -->
+                    <p id="recording-instructions">Press the
+                        <strong>Start Speaking</strong> button and allow access.</p>
+                    <!-- <ul id="notes">
+                        <li>
+                            <p class="no-notes">You don't have any notes.</p>
+                        </li>
+                    </ul> -->
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /app -->
+    </div>
+
+    <div id="footer">
+        <div class="clearfix1">
+            <div class="container">
+                <div class="row">
+
+                    <div class="center">
+                        <!-- <p>Speech to Text Voice Note App 2018</p> -->
+                    </div>
+
+                </div>
+                <!-- /row -->
+            </div>
+            <!-- /container -->
+        </div>
+    </div>
+    <!-- /footer -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="assets/js/script.js?v=1.1"></script>
+<script>
+    $("#database").change(function () {                            
+        var database= $('select[name=database]').val() // Here we can get the value of selected item
+        $('#question').find('option').remove()
+        if(database == "Faculty"){
+            $('#question').append(`
+            <option value="">Select Question</option>
+            <option value="How many faculties are available Today">How many faculties are available Today?</option>
+            <option value="How many faculties are Not available Today">How many faculties are Not available Today?</option>
+            <option value="List Out CSE Faculty Details">List Out CSE Faculty Details</option>
+            `);
+        }else if(database == "Student"){
+            $('#question').append(`
+            <option value="">Select Question</option>
+            <option value="How many Student Registered">How many Student Registered</option>
+            <option value="List Out Student Details">List Out Student Details</option>
+            `);
+        }//adding code
+        else if(database == "Location"){
+            $('#question').append(`
+            <option value="">Select Question</option>
+            <option value="How many locations are mentioned">How many locations are mentioned</option>
+            <option value="List Out Locations and Identification">List Out Locations and Identification</option>
+            `);
+        }
+        else if(database == "NSS_Event"){
+            $('#question').append(`
+            <option value="">Select Question</option>
+            <option value="How many events have taken place">How many events have taken place</option>
+            <option value="List Out NSS Details">List Out NSS Details</option>
+            `);
+        }
+        else if(database == "TimeTable"){
+            $('#question').append(`
+            <option value="">Select Question</option>
+            <option value="How many days is working">How many days is working</option>
+            <option value="List the timetable">List the timetable</option>
+            `);
+        }//code ends
+        else{
+            $('#question').append(`
+            <option value="">Select Question</option>
+            <option value="How many Books We have">How many Books We have?</option>
+            <option value="List Out Books Details">List Out Books Details</option>
+            `);
+        }
+    });
+    
+    $("#question").change(function () {                            
+        var question= $('select[name=question]').val() // Here we can get the value of selected item
+        $('#note-textarea').val("Question : "+question);
+       
+    });
+    function clear_input(){
+        $('#note-textarea').val('');
+    }
+    function get_data(){
+        var question_original = $('#note-textarea').val();
+        var database = $("#database option:selected").val(); 
+        if(question_original == ''){
+            alert("please add question");
+        }
+        else if(database == ''){
+            alert("please select Database");
+        }
+        else{
+            question = question_original.replace("Question : ","")
+            console.log(question);
+            console.log(database);
+            $.ajax({
+                    type: "POST",
+                    url: "submission.php",
+                    data: {
+                        question: question,
+                        database: database,
+                    },
+                    cache: false,
+                    success: function(data) {
+                        //  alert(data);
+                        if(data == ""){
+                            noteTextarea.val("We are unable answer your question right now. Please try to format the question and retry mean while you will have all info in our site \n https://lbce.edu.in/");
+                        }else{
+                            noteTextarea.val(question_original+"\nAnswer :\n"+data);
+                        }
+                    },
+                    error: function(ts) 
+                    { 
+                        console.log(ts.responseText) 
+                    }
+            });
+        }
+    }
+</script>
+</body>
+
+</html>
